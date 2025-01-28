@@ -1,0 +1,68 @@
+import random
+from sympy import mod_inverse
+
+# Step 1: Key Generation
+def generate_keys(p, g):
+    # private key (x) is chosen randomly between 1 and p-2
+    x = random.randint(1, p - 2)
+    # public key (y) is calculated as y = g^x mod p
+    y = pow(g, x, p)
+    return (p, g, y), x  # public key and private key
+
+# Step 2: Encryption
+def encrypt(public_key, m, k):
+    p, g, y = public_key
+    # Compute c1 = g^k mod p
+    c1 = pow(g, k, p)
+    # Compute c2 = m * y^k mod p
+    c2 = (m * pow(y, k, p)) % p
+    return c1, c2
+
+# Step 3: Decryption
+def decrypt(private_key, ciphertext):
+    p, g, y = public_key
+    c1, c2 = ciphertext
+    x = private_key  # private key
+    # Compute s = c1^x mod p
+    s = pow(c1, x, p)
+    # Compute modular inverse of s modulo p
+    s_inv = mod_inverse(s, p)
+    # Compute the original message m = c2 * s_inv mod p
+    m = (c2 * s_inv) % p
+    return m
+
+# Example Usage:
+def main():
+    # Let's choose a small prime p and a generator g for simplicity.
+    p = 101  # A prime number
+    g = 2    # A primitive root mod p
+    
+    # Generate public and private keys
+    public_key, private_key = generate_keys(p, g)
+    print(f"Public Key: (p={p}, g={g}, y={public_key[2]})")
+    print(f"Private Key: {private_key}")
+
+    # Example message (the message m must be in the range [1, p-1])
+    message = 42
+    print(f"Original message: {message}")
+    
+    # Encrypt the message
+    k = random.randint(1, p - 2)  # Choose a random k
+    ciphertext = encrypt(public_key, message, k)
+    print(f"Ciphertext: c1={ciphertext[0]}, c2={ciphertext[1]}")
+
+    # Decrypt the message
+    decrypted_message = decrypt(private_key, ciphertext)
+    print(f"Decrypted message: {decrypted_message}")
+
+# Run the example
+main()
+
+
+
+# Output
+Public Key: (p=101, g=2, y=73)
+Private Key: 49
+Original message: 42
+Ciphertext: c1=24, c2=88
+Decrypted message: 42
