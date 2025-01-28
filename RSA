@@ -1,7 +1,6 @@
 import random
 from math import gcd
 from sympy import isprime
-
 # Function to find modular inverse of e modulo phi(n)
 def mod_inverse(e, phi_n):
     d = 0
@@ -37,7 +36,6 @@ def generate_rsa_keys():
 
     # Public key (e, n) and private key (d, n)
     return ((e, n), (d, n))
-
 # Encrypt a message with the public key
 def encrypt(message, public_key):
     e, n = public_key
@@ -46,7 +44,6 @@ def encrypt(message, public_key):
     # Encrypt the message using the formula C = M^e mod n
     c = pow(m, e, n)
     return c
-
 # Decrypt a message with the private key
 def decrypt(ciphertext, private_key):
     d, n = private_key
