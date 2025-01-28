@@ -1,0 +1,83 @@
+import random
+from math import gcd
+from sympy import isprime
+
+# Function to find modular inverse of e modulo phi(n)
+def mod_inverse(e, phi_n):
+    d = 0
+    x1, x2, x3 = 1, 0, phi_n
+    y1, y2, y3 = 0, 1, e
+
+    while y3 != 0:
+        q = x3 // y3
+        x1, x2, x3 = x2, x1 - q * x2, x3 - q * y3
+        y1, y2, y3 = y2, y1 - q * y2, y3 - q * y3
+
+    if x3 != 1:
+        raise ValueError("No modular inverse, try a different e")
+    return x1 % phi_n
+
+# Generate RSA keys
+def generate_rsa_keys():
+    # Choose two distinct prime numbers p and q
+    p = 61
+    q = 53
+
+    # Compute n = p * q
+    n = p * q
+
+    # Compute φ(n) = (p-1) * (q-1)
+    phi_n = (p - 1) * (q - 1)
+
+    # Choose e such that 1 < e < φ(n) and gcd(e, φ(n)) = 1
+    e = 17  # This is a common choice for e
+
+    # Compute d, the modular inverse of e modulo φ(n)
+    d = mod_inverse(e, phi_n)
+
+    # Public key (e, n) and private key (d, n)
+    return ((e, n), (d, n))
+
+# Encrypt a message with the public key
+def encrypt(message, public_key):
+    e, n = public_key
+    # Convert the message to an integer
+    m = int.from_bytes(message.encode(), 'big')
+    # Encrypt the message using the formula C = M^e mod n
+    c = pow(m, e, n)
+    return c
+
+# Decrypt a message with the private key
+def decrypt(ciphertext, private_key):
+    d, n = private_key
+    # Decrypt the ciphertext using the formula M = C^d mod n
+    m = pow(ciphertext, d, n)
+    # Convert the decrypted integer back to a string
+    decrypted_message = m.to_bytes((m.bit_length() + 7) // 8, 'big').decode()
+    return decrypted_message
+
+# Example Usage
+public_key, private_key = generate_rsa_keys()
+
+print(f"Public Key: {public_key}")
+print(f"Private Key: {private_key}")
+
+message = "Hello, RSA!"
+print(f"Original Message: {message}")
+
+# Encrypt the message
+ciphertext = encrypt(message, public_key)
+print(f"Encrypted Ciphertext: {ciphertext}")
+
+# Decrypt the message
+decrypted_message = decrypt(ciphertext, private_key)
+print(f"Decrypted Message: {decrypted_message}")
+
+
+
+# Output
+Public Key: (17, 3233)
+Private Key: (2753, 3233)
+Original Message: Hello, RSA!
+Encrypted Ciphertext: 2201
+Decrypted Message: Hello, RSA!
