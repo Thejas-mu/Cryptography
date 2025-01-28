@@ -15,8 +15,6 @@ gcd, x, y = extended_euclidean_algorithm(a, b)
 print(f"GCD of {a} and {b} is {gcd}")
 print(f"Coefficients x and y are: x = {x}, y = {y}")
 
-
-
 # output
 GCD of 56 and 15 is 1
 Coefficients x and y are: x = -4, y = 15
