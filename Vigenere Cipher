@@ -1,0 +1,57 @@
+def vigenere_encrypt(plaintext, key):
+    # Prepare the plaintext and key
+    plaintext = plaintext.upper().replace(" ", "")  # Convert to uppercase and remove spaces
+    key = key.upper().replace(" ", "")
+    
+    ciphertext = []
+    key_index = 0  # To track the position in the key
+    
+    for char in plaintext:
+        if char.isalpha():  # Check if character is a letter
+            shift = ord(key[key_index]) - ord('A')
+            encrypted_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
+            ciphertext.append(encrypted_char)
+            key_index = (key_index + 1) % len(key)  # Move to the next key character
+        else:
+            ciphertext.append(char)
+    
+    return ''.join(ciphertext)
+
+
+def vigenere_decrypt(ciphertext, key):
+    # Prepare the ciphertext and key
+    ciphertext = ciphertext.upper().replace(" ", "")  # Convert to uppercase and remove spaces
+    key = key.upper().replace(" ", "")
+    
+    plaintext = []
+    key_index = 0  # To track the position in the key
+    
+    for char in ciphertext:
+        if char.isalpha():  # Check if character is a letter
+            shift = ord(key[key_index]) - ord('A')
+            decrypted_char = chr((ord(char) - ord('A') - shift + 26) % 26 + ord('A'))
+            plaintext.append(decrypted_char)
+            key_index = (key_index + 1) % len(key)  # Move to the next key character
+        else:
+            plaintext.append(char)
+    
+    return ''.join(plaintext)
+
+
+# Example usage:
+plaintext = "HELLO WORLD"
+key = "KEY"
+
+# Encrypt
+encrypted_text = vigenere_encrypt(plaintext, key)
+print("Encrypted:", encrypted_text)
+
+# Decrypt
+decrypted_text = vigenere_decrypt(encrypted_text, key)
+print("Decrypted:", decrypted_text)
+
+
+
+# Output
+Encrypted: RIJVS UYVJN
+Decrypted: HELLO WORLD
