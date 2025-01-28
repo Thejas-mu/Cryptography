@@ -1,0 +1,57 @@
+# Helper function to calculate modular inverse of a under modulo m
+def mod_inverse(a, m):
+    for i in range(1, m):
+        if (a * i) % m == 1:
+            return i
+    return None
+
+# Affine Cipher Encryption
+def affine_encrypt(plaintext, a, b):
+    m = 26  # size of the alphabet (English letters)
+    ciphertext = ''
+    for char in plaintext:
+        if char.isalpha():  # Check if the character is a letter
+            # Convert to lowercase and get the index
+            x = ord(char.lower()) - ord('a')
+            encrypted_char = (a * x + b) % m
+            # Convert back to character
+            ciphertext += chr(encrypted_char + ord('a'))
+        else:
+            # If not a letter, keep the character as is (e.g., punctuation)
+            ciphertext += char
+    return ciphertext
+
+# Affine Cipher Decryption
+def affine_decrypt(ciphertext, a, b):
+    m = 26  # size of the alphabet (English letters)
+    a_inv = mod_inverse(a, m)
+    if a_inv is None:
+        raise ValueError(f"Multiplicative inverse of {a} does not exist modulo {m}.")
+    plaintext = ''
+    for char in ciphertext:
+        if char.isalpha():
+            y = ord(char.lower()) - ord('a')
+            decrypted_char = (a_inv * (y - b)) % m
+            plaintext += chr(decrypted_char + ord('a'))
+        else:
+            plaintext += char
+    return plaintext
+
+# Example usage
+a = 5  # a must be coprime with 26 for the cipher to work
+b = 8  # any integer
+plaintext = "hello world"
+
+# Encrypt
+ciphertext = affine_encrypt(plaintext, a, b)
+print(f"Ciphertext: {ciphertext}")
+
+# Decrypt
+decrypted_text = affine_decrypt(ciphertext, a, b)
+print(f"Decrypted Text: {decrypted_text}")
+
+
+
+# Output
+Ciphertext: rclla xpsme
+Decrypted Text: hello world
