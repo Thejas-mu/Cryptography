@@ -73,8 +73,6 @@ print(f"Encrypted Ciphertext: {ciphertext}")
 decrypted_message = decrypt(ciphertext, private_key)
 print(f"Decrypted Message: {decrypted_message}")
 
-
-
 # Output
 Public Key: (17, 3233)
 Private Key: (2753, 3233)
